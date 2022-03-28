@@ -24,6 +24,7 @@ function App() {
   const Logout = () => {
     console.log('Logout');
     setUser({ username: '', password: '' });
+    setError('');
   }
 
   return (

@@ -1,12 +1,19 @@
 import React from "react";
 import { useState } from "react";
+import Axios from 'axios';
 
 const LoginForm = ({login, error}) => {
     const [userDetail, setUserDetail] = useState({ username: '', password: '' });
     const submitHandler = (e) => {
+        Axios.post('http://localhost:3001/api/insert', {
+            username: userDetail.username,
+            passwords: userDetail.password,
+        }).then(() => {
+            alert('operation success !');
+        });
         e.preventDefault();
         login(userDetail);
-    }
+    };
 
     return (
         <form onSubmit={submitHandler}>

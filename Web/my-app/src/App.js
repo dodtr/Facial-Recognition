@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
-import axios from "axios";
 
 function App() {
   const admin = {
     username: 'admin1',
     password: 'admin12345',
-  };
-
-  const state = {
-    message: ''
   };
 
   const [user, setUser] = useState({ username: '', password: '' });
@@ -28,8 +23,6 @@ function App() {
 
   useEffect(() => {
     console.log('hello world');
-    axios.get('./api')
-         .then(result => this.setState({ message: result.data.message }))
   })
 
   const Logout = () => {

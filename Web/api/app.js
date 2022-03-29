@@ -1,7 +1,25 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json());
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'Chip1018!',
+    database: 'players'
+});
+
+db.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+});
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const users = [
     { id: 1, name: 'John' },
@@ -13,7 +31,20 @@ app.get('/', (req, res) => {
     res.send('Hello world');
 });
 
+app.post('/api/insert', (req, res) => {
+    const username = req.body.username;
+    const passwords = req.body.passwords;
+    const sqlInsert = "INSERT INTO test (username, passwords) VALUES (?, ?);";
+    db.query(sqlInsert, [username, passwords],function (err, result) {
+        if (err) throw err;
+        console.log("Success!");
+    });
+})
+
+/*
 app.get('/api/user', (req, res) => {
+    const sqlInsert = "INSERT INTO test (username) VALUES ('user call');";
+    queryFunction(sqlInsert);
     res.send(users);
 });
 
@@ -30,6 +61,8 @@ app.post('/api/user', (req, res) => {
         //400 Bad Request
         return res.status(400).send('Name is required and min 3 char');
     }
+    const sqlInsert = "INSERT INTO test (username) VALUES ('user call');";
+    queryFunction(sqlInsert);
 
     const user = {
         id: users.length + 1,
@@ -63,7 +96,7 @@ app.delete('/api/user/:id', (req, res) => {
     users.splice(index, 1);
     res.send(user);
 });
-
+*/
 // PORT
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on ${port}`));

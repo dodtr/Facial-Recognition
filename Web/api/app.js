@@ -27,8 +27,13 @@ const users = [
     { id: 3, name: 'Turalyon' },
 ]
 
-app.get('/', (req, res) => {
-    res.send('Hello world');
+app.get('/api/get', (req, res) => {
+    const sqlInsert = "SELECT * FROM players.test;";
+    db.query(sqlInsert, function (err, result) {
+        if (err) throw err;
+        res.send(result);
+        console.log("result");
+    });
 });
 
 app.post('/api/insert', (req, res) => {

@@ -27,7 +27,7 @@ Before start working, please run below commands
 - `npx install` Install packages
 - `npx install -g nodemon` Install nodemon
 
-### `npm start`
+### `npm run devStart`
 Runs the app in the development mode.
 Open http://localhost:3001 to view it in the browser.
 

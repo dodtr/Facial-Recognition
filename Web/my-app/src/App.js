@@ -3,24 +3,33 @@ import LoginForm from "./components/LoginForm";
 import Axios from 'axios';
 
 function App() {
-  const admin = {
-    username: 'admin1',
-    password: 'admin12345',
-  };
-
   const [user, setUser] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [userList, setUserList] = useState([]);
 
   const Login = (details) => {
     console.log(details);
-    if (details.username === admin.username && details.password === admin.password) {
-      console.log('Login');
-      setUser({username: details.username, password: details.password});
-    } else {
-      console.log('Not match');
-      setError("Details do not match");
+    for (let i = 0; i < userList.length; i++) {
+      console.log(userList[i]);
+      if (details.username === userList[i].username && details.password === userList[i].passwords) {
+        console.log('Login');
+        setUser({username: userList[i].username, password: userList[i].password});
+        return ;
+      }
     }
+    console.log('Not match');
+    setError("Details do not match");
+  }
+
+  const Register = (details) => {
+    console.log('register');
+    Axios.post('http://localhost:3001/api/insert', {
+        username: details.username,
+        passwords: details.password,
+    }).then(() => {
+        alert('operation success !');
+    });
+    window.location.reload(false);
   }
 
   useEffect(() => {
@@ -43,11 +52,11 @@ function App() {
           <h2>Welcome, <span>{user.username}</span></h2>
           <button onClick={Logout}>Logout</button>
           { userList.map((value) => {
-            return <h1>username: {value.username} | password: {value.password}</h1> 
+            return <h1>username: {value.username} | password: {value.passwords}</h1> 
           }) }
         </div>
       ) : (
-        <LoginForm login={Login} error={error} />
+        <LoginForm login={Login} register={Register} error={error} lst={userList} />
       )}
     </div>
   );

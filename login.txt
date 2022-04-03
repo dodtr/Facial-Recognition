@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+  <meta property="og:title" content="Mockplus" />
+<!--<meta property="og:url" content="" />-->
+<meta property="og:image" content="https://d3h2k7ug3o5pb3.cloudfront.net/idoc/image/2020-10-27/009f4f41-1821-11eb-a688-0326dab191e7.png" />
+<meta property="og:description" content="All-in-one product design platform for prototyping, collaboration, and creating design systems." />
+    <title>Register</title>
+    <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico'/>
+    <link rel="stylesheet" href="/css/icon/iconfont.css?v=58">
+    <link rel="stylesheet" href="/css/enUS/home.css?v=58">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65309978-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-65309978-3');
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PSTHP97');</script>
+  <!-- End Google Tag Manager -->
+</head>
+<body class="body">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PSTHP97"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<section class="bg">
+  <div class="content">
+    <div class="header-icon">
+      <a href="https://www.mockplus.com">
+        <i class="iconfont icon_logo"></i>
+      </a>
+    </div>
+    <div class="from-content">
+      <h1>Create a Mockplus free account</h1>
+      <div class="from">
+        <div class="from-list">
+          <input id="email" type="text" placeholder="Email" data-text="Please enter a valid email address." autocomplete="off">
+        </div>
+        <div class="from-list">
+          <input id="password" type="password" placeholder="Password (6-20 characters)" data-text="The password must be between 6-20 characters long." autocomplete="off">
+        </div>
+        <div class="from-list">
+          <input id="cofPassword" type="password" placeholder="Confirm password" data-text="Password does not match." autocomplete="off">
+        </div>
+        <p class="tip tip-signup" id="agree" data-text="Please read and accept the User Agreement.">
+          <span class="icon iconfont"></span>
+          <span>By signing up, I agree to Mockplus <a href="https://www.mockplus.com/tos" target="_blank">Terms of Service.</a></span>
+        </p>
+        <p class="error-message">&nbsp;</p>
+        <div class="submit-btn">
+          <button id="register">Continue</button>
+        </div>
+        <p class="tip signup-tip">
+          <span>Already have an account?</span>
+          <a href="/signin?next=https://www.mockplus.com/download/mockplus-rp?hmsr=webprototypingtool&plugin_code=">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/public.js?v=58"></script>
+<script>
+  var next = 'https://www.mockplus.com/download/mockplus-rp?hmsr=webprototypingtool';
+  var source = '';
+  var plugin_code = '';
+  var $email = $('#email');
+  var $password = $('#password');
+  var $cofPassword = $('#cofPassword');
+  var $register = $('#register');
+  var $agree = $('#agree');
+  var $errorMessage = $('.error-message');
+  var agree = false;
+
+  $email.blur(function () {
+    var email = $email.val().trim();
+    if (!validEmail(email)) {
+      setErr($email, $(this).data('text'), $errorMessage);
+    } else {
+      clearErr($email);
+    }
+  });
+
+  $email.keydown(function (e) {
+    if (e.which === 13) {
+      $password.focus();
+    }
+  });
+
+  $password.blur(function () {
+    var password = $password.val();
+    if (password.length < 6 || password.length > 20) {
+      setErr($password, $(this).data('text'), $errorMessage);
+    } else {
+      clearErr($password);
+    }
+  });
+
+  $password.keydown(function (e) {
+    if (e.which === 13) {
+      $cofPassword.focus();
+    }
+  });
+
+  $cofPassword.blur(function () {
+    var password = $password.val();
+    var cofPassword = $cofPassword.val();
+    if (password !== cofPassword) {
+      setErr($cofPassword, $(this).data('text'), $errorMessage);
+    } else {
+      clearErr($cofPassword);
+    }
+  });
+
+  $cofPassword.keydown(function (e) {
+    if (e.which === 13) {
+      $register.click();
+    }
+  });
+
+  $agree.click(function () {
+    if (agree) {
+      $(this).removeClass('agree');
+      $(this).find('.iconfont').removeClass('icon_check_tick');
+      $(this).find('.iconfont').addClass('icon');
+      agree = false;
+    } else {
+      $(this).addClass('agree');
+      $(this).find('.iconfont').addClass('icon_check_tick');
+      $(this).find('.iconfont').removeClass('icon');
+      agree = true;
+    }
+  });
+
+  function register(regData) {
+    showLoading();
+    $.post('/signup', regData, function (res) {
+      hideLoading();
+      if (res.code === 0) {
+        window.location.href = res.payload.nextURL;
+        return;
+      }
+      // 释放按钮
+      $register.removeAttr('disabled');
+      showErr(res.message);
+    });
+  }
+
+  $register.click(function () {
+    var email = $email.val().trim();
+    var password = $password.val();
+    var cofPassword = $cofPassword.val();
+
+    if (!validEmail(email)) {
+      setErr($email, $email.data('text'), $errorMessage);
+      return;
+    }
+    clearErr($email);
+
+    if (password.length < 6 || password.length > 20) {
+      setErr($password, $password.data('text'), $errorMessage);
+      return;
+    }
+    clearErr($password);
+
+    if (password !== cofPassword) {
+      setErr($cofPassword, $cofPassword.data('text'), $errorMessage);
+      return;
+    }
+    clearErr($cofPassword);
+
+    if (!agree) {
+      showErr($agree.data('text'));
+      return;
+    }
+    $errorMessage.css({'opacity': 0});
+
+    // 禁止点击按钮
+    $(this).attr('disabled', true);
+
+    var regData = {
+      email: email,
+      password: password,
+      next: next,
+      source: source,
+      plugin_code: plugin_code
+    };
+    register(regData);
+  });
+</script>
+<script>
+  var _hmt = _hmt || [];
+  (function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?dd73aea5ed0c0c6d5b000439a11b6db6";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+</body>
+</html>
